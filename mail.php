@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ";
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= 'From: no-reply@ics22.com' . "\r\n";
+        $headers .= 'From: robbymwangi353@gmail.com' . "\r\n";
 
         // Send the email
         if (mail($email, $subject, $message, $headers)) {
@@ -62,5 +62,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </html>
     <?php
 }
-?>
 ?>
