@@ -1,4 +1,9 @@
 <?php
+require 'vendor/autoload.php'; // Include PHPMailer
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
@@ -22,17 +27,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </body>
             </html>
         ";
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= 'From: robbymwangi353@gmail.com' . "\r\n";
 
-        // Send the email
-        if (mail($email, $subject, $message, $headers)) {
+        // Create a new PHPMailer instance
+        $mail = new PHPMailer(true);
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+            $mail->SMTPAuth = true;
+            $mail->Username = 'robby.muhia@strathmore.edu'; // SMTP username
+            $mail->Password = 'daua avci nucv rgul'; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Recipients
+            $mail->setFrom('robby.muhia@strathmore.edu', 'ICS 2.2 Admin');
+            $mail->addAddress($email, $username);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+
+            // Send the email
+            $mail->send();
             echo "A welcome email has been sent to $email.";
-        } else {
-            echo "Failed to send the welcome email.";
-            $error = error_get_last();
-            echo 'Error: ' . $error['message'];
+        } catch (Exception $e) {
+            echo "Failed to send the welcome email. Mailer Error: {$mail->ErrorInfo}";
         }
     } else {
         // Email is not valid
